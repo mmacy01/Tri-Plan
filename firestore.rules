@@ -1,0 +1,11 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Only the single shared plan document is readable/writable.
+    // Access is gated by knowing the exact SYNC_CODE (the doc id),
+    // so keep that code non-obvious. Nothing else in the project is exposed.
+    match /plans/{code} {
+      allow read, write: if true;
+    }
+  }
+}

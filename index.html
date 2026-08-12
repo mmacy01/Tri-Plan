@@ -1,0 +1,643 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#12151C">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Two to the Line">
+<meta name="application-name" content="Two to the Line">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+<title>Two to the Line — Mike &amp; Taylor</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap');
+
+:root{
+  --bg:#12151C; --bg2:#0d1016; --panel:#191D27; --panel2:#20252F;
+  --line:#2A303C; --line2:#353C4A;
+  --ink:#EAF0F7; --mut:#8B95A6; --mut2:#616B7C;
+  --swim:#35C4E8; --bike:#F5A524; --run:#FF6B5B; --brick:#A780FF; --rest:#5A6472;
+  --gold:#FFD166; --sync:#4ADE80;
+  --disp:'Space Grotesk',system-ui,-apple-system,sans-serif;
+  --body:'Inter',system-ui,-apple-system,'Segoe UI',sans-serif;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;padding:0}
+body{font-family:var(--body);background:var(--bg);color:var(--ink);min-height:100vh;line-height:1.5;
+  background-image:radial-gradient(1200px 400px at 50% -8%, rgba(53,196,232,.10), transparent 60%);}
+.app{max-width:520px;margin:0 auto;padding:0 0 92px;position:relative}
+
+header{padding:18px 18px 12px;position:sticky;top:0;z-index:20;
+  background:linear-gradient(180deg,var(--bg) 72%,rgba(18,21,28,0));}
+.brand{display:flex;align-items:center;gap:10px}
+.mark{width:34px;height:34px;flex:none;border-radius:9px;position:relative;overflow:hidden;
+  background:conic-gradient(from 220deg,var(--swim),var(--bike),var(--run),var(--swim))}
+.mark::after{content:"";position:absolute;inset:3px;border-radius:6px;background:var(--bg2)}
+.mark span{position:absolute;inset:0;display:grid;place-items:center;font-family:var(--disp);
+  font-weight:700;font-size:15px;z-index:2;color:var(--ink)}
+.title{font-family:var(--disp);font-weight:700;font-size:19px;letter-spacing:-.4px;line-height:1.05}
+.sub{font-size:11px;color:var(--mut);letter-spacing:.14em;text-transform:uppercase;font-weight:600}
+.syncpill{margin-left:auto;display:flex;align-items:center;gap:6px;font-size:10px;font-weight:600;
+  letter-spacing:.06em;text-transform:uppercase;color:var(--mut2);background:var(--panel);
+  border:1px solid var(--line);border-radius:20px;padding:5px 10px;white-space:nowrap}
+.syncpill .d{width:7px;height:7px;border-radius:50%;background:var(--mut2);flex:none}
+.syncpill.live{color:var(--sync)} .syncpill.live .d{background:var(--sync);box-shadow:0 0 8px var(--sync)}
+.syncpill.local{color:var(--bike)} .syncpill.local .d{background:var(--bike)}
+
+.who{display:flex;gap:8px;margin-top:14px}
+.who button{flex:1;background:var(--panel);border:1px solid var(--line);color:var(--mut);
+  border-radius:12px;padding:10px 12px;text-align:left;cursor:pointer;transition:.18s;
+  display:flex;flex-direction:column;gap:2px;min-width:0}
+.who button .nm{font-family:var(--disp);font-weight:600;font-size:15px;color:var(--ink);
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.who button .pc{font-size:11px;color:var(--mut);font-variant-numeric:tabular-nums}
+.who button.mike.on{box-shadow:0 0 0 1px var(--swim) inset;border-color:transparent;background:var(--panel2)}
+.who button.taylor.on{box-shadow:0 0 0 1px var(--run) inset;border-color:transparent;background:var(--panel2)}
+
+.rail{display:flex;gap:6px;overflow-x:auto;padding:14px 18px 6px;scrollbar-width:none}
+.rail::-webkit-scrollbar{display:none}
+.wk{flex:none;width:44px;height:52px;border-radius:12px;background:var(--panel);border:1px solid var(--line);
+  cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;
+  transition:.16s;position:relative}
+.wk .n{font-family:var(--disp);font-weight:600;font-size:15px;color:var(--ink)}
+.wk .b{font-size:9px;color:var(--mut2);text-transform:uppercase;letter-spacing:.05em}
+.wk.on{background:var(--panel2);border-color:var(--line2)}
+.wk.cur{border-color:var(--swim)}
+.wk .dot{position:absolute;top:5px;right:5px;width:6px;height:6px;border-radius:50%;background:var(--gold);display:none}
+.wk.done .dot{display:block}
+.wk.race .n{color:var(--gold)}
+
+.phase{padding:2px 18px 0;font-size:12px;color:var(--mut);font-weight:500}
+.phase b{color:var(--ink);font-weight:600}
+
+.days{padding:12px 18px 0;display:flex;flex-direction:column;gap:10px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:16px;position:relative;overflow:hidden}
+.card::before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--rest);z-index:1}
+.card.swim::before{background:var(--swim)} .card.bike::before{background:var(--bike)}
+.card.run::before{background:var(--run)} .card.brick::before{background:var(--brick)}
+.card.race::before{background:var(--gold)}
+.card.rest{opacity:.82}
+.top{display:flex;gap:13px;align-items:flex-start;padding:14px 14px 14px 16px;cursor:pointer}
+.dayhd{flex:1;min-width:0}
+.drow{display:flex;align-items:center;gap:8px;margin-bottom:3px;flex-wrap:wrap}
+.dlab{font-size:10px;font-weight:700;letter-spacing:.13em;text-transform:uppercase;color:var(--mut2)}
+.tag{font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:2px 7px;border-radius:20px;color:var(--bg)}
+.tag.swim{background:var(--swim)} .tag.bike{background:var(--bike)} .tag.run{background:var(--run)}
+.tag.brick{background:var(--brick)} .tag.rest{background:var(--rest);color:var(--ink)} .tag.race{background:var(--gold)}
+.dtitle{font-family:var(--disp);font-weight:600;font-size:15px;letter-spacing:-.2px;margin:0 0 3px}
+.ddur{font-size:11px;color:var(--mut2);font-weight:600;font-variant-numeric:tabular-nums}
+.ddet{font-size:12.5px;color:var(--mut);margin-top:2px}
+.more{display:inline-flex;align-items:center;gap:5px;margin-top:9px;font-size:10.5px;font-weight:700;
+  color:var(--mut2);text-transform:uppercase;letter-spacing:.09em}
+.chev{width:12px;height:12px;stroke:currentColor;fill:none;stroke-width:2.6;stroke-linecap:round;stroke-linejoin:round;transition:transform .3s}
+.card.open .chev{transform:rotate(180deg)}
+
+.chk{flex:none;width:30px;height:30px;border-radius:9px;border:2px solid var(--line2);background:transparent;
+  cursor:pointer;display:grid;place-items:center;margin-top:1px;transition:.15s}
+.chk svg{width:16px;height:16px;stroke:var(--bg);stroke-width:3.4;fill:none;opacity:0;
+  stroke-linecap:round;stroke-linejoin:round;transition:.15s}
+.card.swim .chk.on{background:var(--swim);border-color:var(--swim)}
+.card.bike .chk.on{background:var(--bike);border-color:var(--bike)}
+.card.run .chk.on{background:var(--run);border-color:var(--run)}
+.card.brick .chk.on{background:var(--brick);border-color:var(--brick)}
+.card.race .chk.on{background:var(--gold);border-color:var(--gold)}
+.chk.on svg{opacity:1}
+.chk.na{opacity:.3;pointer-events:none;border-style:dashed}
+
+.detail{max-height:0;overflow:hidden;transition:max-height .32s ease}
+.card.open .detail{max-height:1200px}
+.detin{padding:0 16px 15px;border-top:1px solid var(--line)}
+.eff{display:inline-block;font-size:11px;font-weight:600;color:var(--ink);background:var(--panel2);
+  border:1px solid var(--line2);padding:4px 10px;border-radius:20px;margin:13px 0 2px}
+.block{margin-top:12px}
+.block .bl{font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--mut2);font-weight:700}
+.block p{margin:4px 0 0;font-size:13px;color:var(--mut)}
+.block ul{margin:6px 0 0;padding-left:0;list-style:none;display:flex;flex-direction:column;gap:6px}
+.block li{font-size:13px;color:var(--mut);padding-left:16px;position:relative}
+.block li::before{content:"";position:absolute;left:2px;top:8px;width:5px;height:5px;border-radius:50%;background:var(--line2)}
+.cue{margin-top:13px;font-size:12.5px;color:var(--ink);background:rgba(53,196,232,.06);
+  border:1px solid var(--line2);border-radius:11px;padding:10px 12px;line-height:1.5}
+
+.pg{padding:16px 18px 0;display:none;flex-direction:column;gap:14px}
+.ring{display:flex;align-items:center;gap:18px;background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:18px}
+.ring svg{width:96px;height:96px;flex:none}
+.ring .info h3{font-family:var(--disp);margin:0;font-size:30px;font-weight:700;letter-spacing:-1px}
+.ring .info p{margin:2px 0 0;font-size:12px;color:var(--mut)}
+.ring .info .of{color:var(--mut2)}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.stat{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:13px 14px}
+.stat .k{font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--mut2);font-weight:600}
+.stat .v{font-family:var(--disp);font-size:24px;font-weight:700;margin-top:3px;letter-spacing:-.5px;font-variant-numeric:tabular-nums}
+.stat .v small{font-size:12px;color:var(--mut);font-weight:500;font-family:var(--body)}
+.disc{display:flex;flex-direction:column;gap:9px;background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:15px}
+.disc .dr{display:flex;align-items:center;gap:10px;font-size:13px}
+.disc .dr .lb{width:52px;font-weight:600;font-size:12px}
+.disc .bar{flex:1;height:8px;border-radius:6px;background:var(--panel2);overflow:hidden}
+.disc .bar i{display:block;height:100%;border-radius:6px;transition:width .5s}
+.disc .ct{font-size:11px;color:var(--mut);font-variant-numeric:tabular-nums;width:44px;text-align:right}
+.count{background:linear-gradient(135deg,var(--panel),var(--panel2));border:1px solid var(--line);border-radius:16px;padding:16px;text-align:center}
+.count .big{font-family:var(--disp);font-size:38px;font-weight:700;letter-spacing:-1.5px;color:var(--gold)}
+.count .lb{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--mut);font-weight:600;margin-top:2px}
+.datefield{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:10px 12px}
+.datefield label{display:block;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--mut2);font-weight:600;margin-bottom:5px}
+.datefield input{background:transparent;border:none;color:var(--ink);font-family:var(--body);font-size:13px;width:100%;padding:0;font-weight:500}
+.datefield input::-webkit-calendar-picker-indicator{filter:invert(.6)}
+.rally{font-size:12.5px;color:var(--mut);text-align:center;padding:2px 8px}
+.rally b{color:var(--ink)}
+
+.gd{padding:16px 18px 0;display:none;flex-direction:column;gap:12px}
+.gcard{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:15px 16px}
+.gcard h4{font-family:var(--disp);margin:0 0 9px;font-size:15px;font-weight:600;display:flex;align-items:center;gap:8px}
+.gcard h4 .pin{width:9px;height:9px;border-radius:3px;flex:none}
+.gcard p{margin:0 0 8px;font-size:13px;color:var(--mut)}
+.gcard p:last-child{margin-bottom:0}
+.gcard ul{margin:0;padding-left:0;list-style:none;display:flex;flex-direction:column;gap:7px}
+.gcard li{font-size:13px;color:var(--mut);padding-left:20px;position:relative}
+.gcard li::before{content:"";position:absolute;left:2px;top:8px;width:6px;height:6px;border-radius:50%;background:var(--line2)}
+.gcard li b{color:var(--ink);font-weight:600}
+.dist{display:flex;gap:8px}
+.dist .d{flex:1;text-align:center;background:var(--panel2);border-radius:12px;padding:11px 4px}
+.dist .d .n{font-family:var(--disp);font-size:19px;font-weight:700}
+.dist .d.s .n{color:var(--swim)} .dist .d.b .n{color:var(--bike)} .dist .d.r .n{color:var(--run)}
+.dist .d .l{font-size:10px;color:var(--mut2);text-transform:uppercase;letter-spacing:.08em;margin-top:2px}
+.note{font-size:11.5px;color:var(--mut2);text-align:center;padding:14px 24px 4px;line-height:1.6}
+.resetbtn{display:block;margin:6px auto 0;background:none;border:1px solid var(--line);color:var(--mut2);
+  font-size:11px;padding:7px 14px;border-radius:20px;cursor:pointer;font-family:var(--body)}
+
+nav{position:fixed;bottom:0;left:0;right:0;z-index:30;display:flex;justify-content:center;
+  background:linear-gradient(0deg,var(--bg) 78%,rgba(18,21,28,0));padding:8px 0 max(10px,env(safe-area-inset-bottom))}
+.navin{display:flex;gap:4px;background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:5px;box-shadow:0 8px 30px rgba(0,0,0,.4)}
+nav button{background:none;border:none;color:var(--mut2);font-family:var(--body);font-weight:600;font-size:12px;
+  padding:9px 20px;border-radius:11px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:3px;transition:.15s}
+nav button svg{width:19px;height:19px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+nav button.on{color:var(--ink);background:var(--panel2)}
+.hidden{display:none!important}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<div class="app">
+  <header>
+    <div class="brand">
+      <div class="mark"><span>3</span></div>
+      <div>
+        <div class="title">Two to the Line</div>
+        <div class="sub">Sprint Triathlon · 12 Weeks</div>
+      </div>
+      <div class="syncpill" id="sync"><span class="d"></span><span id="synctxt">Connecting…</span></div>
+    </div>
+    <div class="who" id="who"></div>
+  </header>
+
+  <section id="plan">
+    <div class="rail" id="rail"></div>
+    <div class="phase" id="phase"></div>
+    <div class="days" id="days"></div>
+  </section>
+
+  <section class="pg" id="pg"></section>
+
+  <section class="gd" id="gd">
+    <div class="gcard">
+      <h4><span class="pin" style="background:var(--gold)"></span>Race distances</h4>
+      <div class="dist">
+        <div class="d s"><div class="n">750m</div><div class="l">Swim</div></div>
+        <div class="d b"><div class="n">20km</div><div class="l">Bike</div></div>
+        <div class="d r"><div class="n">5km</div><div class="l">Run</div></div>
+      </div>
+      <p style="margin-top:11px">A sprint is the friendliest way into the sport — long enough to feel like a real achievement, short enough to finish on a base you can build in three months.</p>
+    </div>
+    <div class="gcard">
+      <h4><span class="pin" style="background:var(--brick)"></span>Effort zones — how hard is "easy"?</h4>
+      <p>Tap any workout to see its target effort. Those targets use RPE (rate of perceived exertion, 1–10):</p>
+      <ul>
+        <li><b>Easy · RPE 2–3:</b> fully conversational, could go all day. Most base work lives here.</li>
+        <li><b>Steady · RPE 3–4:</b> comfortable endurance, short sentences.</li>
+        <li><b>Tempo · RPE 5–6:</b> comfortably hard, breathing deepens.</li>
+        <li><b>Firm · RPE 7–8:</b> hard efforts, only a few words at a time.</li>
+        <li><b>Race effort · RPE 6–7:</b> the sustainable "strong but controlled" you'll hold on race day.</li>
+      </ul>
+      <p>Prefer a heart-rate strap? Easy/steady ≈ zones 1–2, tempo ≈ zone 3, firm ≈ zone 4.</p>
+    </div>
+    <div class="gcard">
+      <h4><span class="pin" style="background:var(--brick)"></span>Transitions (the 4th sport)</h4>
+      <ul>
+        <li><b>T1 · swim→bike:</b> goggles/cap off, helmet <i>on and buckled before you touch the bike</i>, shoes, go.</li>
+        <li>The <b>brick workouts</b> train your legs for that jelly feeling of running straight off the bike. Don't skip them.</li>
+        <li>Lay your gear out the same way every time. Race morning is not the day to improvise.</li>
+      </ul>
+    </div>
+    <div class="gcard">
+      <h4><span class="pin" style="background:var(--swim)"></span>Gear checklist</h4>
+      <ul>
+        <li><b>Swim:</b> goggles, tri suit or trunks, swim cap, wetsuit if the water's cold and it's allowed.</li>
+        <li><b>Bike:</b> road or hybrid bike in working order, helmet (mandatory), water bottle, spare tube + inflation.</li>
+        <li><b>Run:</b> running shoes (elastic laces save time), race belt for your number, visor or hat.</li>
+        <li><b>Both:</b> body glide, sunscreen, a small towel for your transition spot.</li>
+      </ul>
+    </div>
+    <div class="gcard">
+      <h4><span class="pin" style="background:var(--bike)"></span>Fueling &amp; training smart</h4>
+      <ul>
+        <li>Keep most sessions <b>conversational pace</b> — you should be able to talk. Base first, speed later.</li>
+        <li>Hydrate before, during, and after. On longer bricks, practice sipping water and any race fuel so nothing's a surprise.</li>
+        <li>Eat balanced meals that leave you recovered and energized for the next session; let hunger and energy guide you.</li>
+        <li><b>Rest days are training too</b> — that's when your body adapts and gets stronger.</li>
+        <li>A little soreness is normal; sharp or lingering pain is a signal to back off, not push through.</li>
+      </ul>
+    </div>
+    <div class="gcard">
+      <h4><span class="pin" style="background:var(--run)"></span>Race day</h4>
+      <ul>
+        <li>Arrive early, rack the bike, set up transition, walk the swim-in and bike-out so nothing's a mystery.</li>
+        <li>Start the swim <b>calmer than feels natural</b> — settle your breathing in the first 100m.</li>
+        <li>Ride steady, don't blow up. Save something for the run.</li>
+        <li>Run your own race. You trained for this. Cross the line together.</li>
+      </ul>
+    </div>
+    <button class="resetbtn" id="reset">Reset all progress</button>
+    <p class="note">General fitness guidance for healthy beginners, not medical advice. Check with your doctor before starting — especially coming back from surgery or injury.</p>
+  </section>
+
+  <nav>
+    <div class="navin">
+      <button data-t="plan" class="on"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M3 9h18M8 2v4M16 2v4"/></svg>Plan</button>
+      <button data-t="pg"><svg viewBox="0 0 24 24"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg>Progress</button>
+      <button data-t="gd"><svg viewBox="0 0 24 24"><path d="M12 3v18M5 7h14M7 11l-3 4h6zM17 11l-3 4h6z"/></svg>Guide</button>
+    </div>
+  </nav>
+</div>
+
+<script>
+/* ============================================================
+   FIREBASE SYNC SETUP  —  Mike, edit the two blocks below.
+   (See README.md for the full step-by-step.)
+   ============================================================ */
+const FB = {
+  apiKey:            "AIzaSyD53NvhpAJNN1HRMLYXClISV_VsfVbNtR8",
+  authDomain:        "triathlon-training-sprint.firebaseapp.com",
+  projectId:         "triathlon-training-sprint",
+  storageBucket:     "triathlon-training-sprint.firebasestorage.app",
+  messagingSenderId: "875778937726",
+  appId:             "1:875778937726:web:6f691088aa15a333ee992f"
+};
+const SYNC_CODE = "mike-taylor-sprint-2026";
+/* ============================================================ */
+
+/* ---------- 12-WEEK BEGINNER SPRINT PLAN (detailed) ----------
+   Same schedule as before — each session now opens into a full
+   breakdown: target effort, warm-up, main set, cool-down, cue. */
+const PLAN=[
+ {p:"Foundation — get comfortable in all three",days:[
+  {d:"Mon",t:"rest",ti:"Rest",du:"",foc:"Recovery",note:"Full rest, or an easy 15–20 min walk with light stretching. Rest days are when your body absorbs the work and actually gets fitter."},
+  {d:"Tue",t:"swim",ti:"Swim · form",du:"20 min",foc:"Relaxed breathing, long reach",eff:"Easy · RPE 2–3",wu:"100m easy, mixing swim and kick to loosen up.",set:["4×50m freestyle easy, 20–30s rest — long, smooth strokes.","If time allows, 2×25m backstroke or kick to relax."],cd:"50m very easy.",cue:"Exhale slowly into the water the whole time your face is down — never hold your breath."},
+  {d:"Wed",t:"bike",ti:"Easy spin",du:"30 min",foc:"Smooth, comfortable spin",eff:"Easy · RPE 2–3",wu:"5 min soft-pedal, gradually building.",set:["20 min steady, conversational spin at ~85–90 rpm.","Stay seated, relax your shoulders and grip."],cd:"5 min easy.",cue:"If you can't speak in full sentences, back off — this should feel gentle."},
+  {d:"Thu",t:"run",ti:"Run/walk",du:"20 min",foc:"Gentle run/walk",eff:"Easy · RPE 2–3",wu:"3 min brisk walk.",set:["6×: 2 min easy jog / 1 min walk.","Short, light, quick steps — don't overstride."],cd:"2 min walk.",cue:"It should feel almost too easy right now. That's exactly right."},
+  {d:"Fri",t:"rest",ti:"Rest",du:"",foc:"Recovery",note:"Full rest, or gentle mobility and stretching if you feel stiff."},
+  {d:"Sat",t:"bike",ti:"Endurance ride",du:"40 min",foc:"Build saddle time",eff:"Steady · RPE 3–4",wu:"5 min easy build.",set:["30 min steady endurance ride.","Include one 5-min gently rolling or slightly firmer stretch if your route allows."],cd:"5 min easy spin.",cue:"Practice reaching for and drinking from your bottle while still pedaling."},
+  {d:"Sun",t:"run",ti:"Easy run + core",du:"25 min",foc:"Easy aerobic + core",eff:"Easy · RPE 2–3",wu:"3 min walk into jog.",set:["22 min easy continuous run — walk breaks are fine.","Core (10 min), 3 rounds: 30s plank, 10 bird-dogs/side, 12 glute bridges."],cd:"Light full-body stretch.",cue:"Brace your core like someone's about to poke your belly — steady and controlled."},
+ ]},
+ {p:"Foundation — build consistency",days:[
+  {d:"Mon",t:"rest",ti:"Rest",du:"",foc:"Recovery",note:"Full rest or an easy walk. Consistency matters more than any single session."},
+  {d:"Tue",t:"swim",ti:"Swim · intervals",du:"25 min",foc:"Form under light fatigue",eff:"Easy · RPE 2–3",wu:"100m easy + 2×25m kick.",set:["6×50m freestyle with 20s rest — smooth and even.","1×100m easy at the end, relaxed."],cd:"50m easy.",cue:"Count your strokes per length and try to keep them low and consistent."},
+  {d:"Wed",t:"bike",ti:"Easy ride",du:"35 min",foc:"Comfortable endurance",eff:"Easy · RPE 2–3",wu:"5 min build.",set:["25 min steady conversational spin.","Focus on smooth, round pedal strokes."],cd:"5 min easy.",cue:"Pedal in circles, not squares — think of scraping mud off your shoe at the bottom."},
+  {d:"Thu",t:"run",ti:"Run/walk",du:"25 min",foc:"Longer run intervals",eff:"Easy · RPE 2–3",wu:"3 min brisk walk.",set:["5×: 3 min easy jog / 1 min walk.","Keep the jog easy enough to chat."],cd:"2 min walk.",cue:"Relax your hands and jaw — tension just wastes energy."},
+  {d:"Fri",t:"swim",ti:"Technique swim",du:"20 min",foc:"Drills & feel for the water",eff:"Easy · RPE 2",wu:"100m easy.",set:["4×25m single-arm drill (other arm at your side).","4×25m catch-up drill.","2×50m easy, putting it together."],cd:"50m easy.",cue:"Drills aren't about speed — go slow and feel the water on your forearm."},
+  {d:"Sat",t:"bike",ti:"Endurance ride",du:"45 min",foc:"Steady distance",eff:"Steady · RPE 3–4",wu:"5 min easy.",set:["35 min steady endurance.","Add a small hill or two if the route offers them — stay seated and spin up."],cd:"5 min easy.",cue:"On hills, shift down early to keep your cadence smooth."},
+  {d:"Sun",t:"run",ti:"Easy run",du:"30 min",foc:"Continuous easy",eff:"Easy · RPE 2–3",wu:"3 min walk/jog.",set:["30 min easy — continuous if you can, walk breaks fine.","Keep it fully conversational the whole way."],cd:"Walk + stretch.",cue:"Try to make the second half feel as easy as the first."},
+ ]},
+ {p:"Foundation — first taste of continuous",days:[
+  {d:"Mon",t:"rest",ti:"Rest",du:"",foc:"Recovery",note:"Rest or an easy walk. You're building a base — patience pays off."},
+  {d:"Tue",t:"swim",ti:"Swim build",du:"30 min",foc:"Toward continuous swimming",eff:"Easy · RPE 3",wu:"100m easy + 2×25m kick.",set:["8×50m with 15–20s rest, smooth.","Finish with 1×100m continuous, relaxed."],cd:"50m easy.",cue:"Try breathing every 3rd stroke (both sides) on a couple of the 50s."},
+  {d:"Wed",t:"bike",ti:"Ride w/ efforts",du:"40 min",foc:"Intro to harder efforts",eff:"Easy w/ firm bursts · RPE 5–6 on efforts",wu:"8 min easy build.",set:["3×2 min at a firmer, tempo effort (RPE 5–6), 2 min easy spin between.","Rest of the ride easy."],cd:"5 min easy.",cue:"'Firmer' means breathing harder but in control — not a sprint."},
+  {d:"Thu",t:"run",ti:"Continuous run",du:"30 min",foc:"First continuous run",eff:"Easy · RPE 3",wu:"5 min walk into jog.",set:["Run 30 min continuously at an easy pace.","Walk if you need to — no ego, just keep moving."],cd:"Walk + stretch.",cue:"Pick a pace you could hold a conversation at, then hold it."},
+  {d:"Fri",t:"rest",ti:"Rest + core",du:"",foc:"Recovery + optional core",note:"Rest, or an easy 10 min core session if you feel good: planks, side planks, dead bugs."},
+  {d:"Sat",t:"bike",ti:"Long ride",du:"50 min",foc:"Longest ride yet",eff:"Steady · RPE 3–4",wu:"5 min easy.",set:["40 min steady endurance.","Practice eating a few bites of a snack mid-ride to train your gut."],cd:"5 min easy.",cue:"Fuel before you're hungry; sip before you're thirsty."},
+  {d:"Sun",t:"brick",ti:"First brick!",du:"40 min",foc:"First bike-to-run",eff:"Steady · RPE 3–4",wu:"Lay your run shoes out ready to go.",set:["Bike 30 min steady.","Quick transition: rack bike, swap shoes, go — aim under 2 min.","Run 10 min easy right off the bike."],cd:"Walk 3 min + stretch.",cue:"Your legs will feel like bricks for the first 3–4 min — that's normal, it passes. Short, quick steps."},
+ ]},
+ {p:"Recovery + build — absorb the work",days:[
+  {d:"Mon",t:"rest",ti:"Rest",du:"",foc:"Recovery",note:"Rest or easy walk. This is a lighter week to let fitness catch up — don't skip the easy."},
+  {d:"Tue",t:"swim",ti:"Swim distance",du:"30 min",foc:"Familiarize race distance",eff:"Easy · RPE 3",wu:"100m easy + 4×25m drills.",set:["3×250m with 30s rest at an easy, even pace (~750m total).","Or split as 250 / 250 / 100+150 if you need more breaks."],cd:"50m easy.",cue:"Settle into a rhythm you could repeat — this is distance practice, not a race."},
+  {d:"Wed",t:"bike",ti:"Easy ride",du:"40 min",foc:"Recovery spin",eff:"Easy · RPE 2–3",wu:"5 min easy.",set:["30 min truly easy — legs should feel fresher at the end than the start."],cd:"5 min easy.",cue:"Recovery weeks are earned rest, not laziness. Keep it light on purpose."},
+  {d:"Thu",t:"run",ti:"Easy run",du:"30 min",foc:"Relaxed aerobic",eff:"Easy · RPE 2–3",wu:"5 min walk/jog.",set:["25 min easy continuous run.","Smooth and comfortable throughout."],cd:"Walk + stretch.",cue:"Run tall — imagine a string gently lifting the top of your head."},
+  {d:"Fri",t:"swim",ti:"Technique swim",du:"25 min",foc:"Stroke refinement",eff:"Easy · RPE 2",wu:"100m easy.",set:["4×25m catch-up drill.","4×50m smooth freestyle, thinking 'long'.","2×25m easy kick."],cd:"50m easy.",cue:"Reach forward and 'hold' the water before you pull — patience at the front of the stroke."},
+  {d:"Sat",t:"bike",ti:"Endurance ride",du:"45 min",foc:"Steady & enjoyable",eff:"Steady · RPE 3–4",wu:"5 min easy.",set:["35 min steady endurance at a pace you enjoy.","Relaxed upper body, eyes up."],cd:"5 min easy.",cue:"Scan the road ahead, not your front wheel."},
+  {d:"Sun",t:"run",ti:"Long-ish run",du:"35 min",foc:"Gentle distance build",eff:"Easy · RPE 3",wu:"5 min walk/jog.",set:["35 min easy, slightly longer than usual.","Finish feeling like you had another 5 min in the tank."],cd:"Walk + stretch.",cue:"Leave something in reserve — long runs build the engine, not the ego."},
+ ]},
+ {p:"Build — add a little intensity",days:[
+  {d:"Mon",t:"rest",ti:"Rest",du:"",foc:"Recovery",note:"Rest or easy walk. Intensity ramps a little this week, so arrive fresh."},
+  {d:"Tue",t:"swim",ti:"Swim · 750m",du:"35 min",foc:"Continuous race distance",eff:"Easy · RPE 3–4",wu:"150m easy + 2×25m kick.",set:["Swim 750m continuous (or minimal rest each 250m) at a steady, repeatable pace.","Note roughly how long it takes."],cd:"100m easy.",cue:"Even effort beats fast-then-fade. Start controlled."},
+  {d:"Wed",t:"bike",ti:"Tempo ride",du:"45 min",foc:"Sustained tempo",eff:"Tempo · RPE 5–6 on efforts",wu:"10 min easy build.",set:["4×3 min at tempo (RPE 5–6) with 2 min easy between.","Steady, strong, controlled — not all-out."],cd:"5 min easy.",cue:"Tempo is 'comfortably hard' — you could say a short sentence, not a paragraph."},
+  {d:"Thu",t:"run",ti:"Run w/ pickups",du:"35 min",foc:"Leg speed",eff:"Easy w/ pickups · RPE 6 on surges",wu:"10 min easy.",set:["4×1 min faster pickups (RPE 6) with 2 min easy jog between.","Stay relaxed and smooth when you pick it up."],cd:"5 min easy + stretch.",cue:"Pickups are about quick, light turnover — not sprinting."},
+  {d:"Fri",t:"rest",ti:"Rest + core",du:"",foc:"Recovery + optional core",note:"Rest, or 10 min core: planks, side planks, glute bridges, dead bugs."},
+  {d:"Sat",t:"brick",ti:"Brick",du:"60 min",foc:"Bike-to-run transition",eff:"Steady · RPE 3–4",wu:"Shoes laid out ready.",set:["Bike 45 min steady.","Quick transition (aim under 2 min).","Run 15 min easy off the bike."],cd:"Walk 3 min + stretch.",cue:"Start the run slightly slower than feels right — your legs lie to you for the first km."},
+  {d:"Sun",t:"run",ti:"Long run",du:"40 min",foc:"Endurance",eff:"Easy · RPE 3",wu:"5 min walk/jog.",set:["40 min easy, steady effort.","Keep it conversational the whole way."],cd:"Walk + stretch.",cue:"If in doubt, slow down — easy runs should be genuinely easy."},
+ ]},
+ {p:"Build — hold the rhythm",days:[
+  {d:"Mon",t:"rest",ti:"Rest",du:"",foc:"Recovery",note:"Rest or easy walk."},
+  {d:"Tue",t:"swim",ti:"Swim intervals",du:"40 min",foc:"Strength & endurance",eff:"Steady · RPE 4",wu:"150m easy + 4×25m drills.",set:["3×200m (30s rest), even and smooth.","3×50m a little stronger (20s rest).","(~750m+ of quality work.)"],cd:"100m easy.",cue:"On the 50s, lengthen the stroke rather than thrashing faster."},
+  {d:"Wed",t:"bike",ti:"Endurance ride",du:"50 min",foc:"Steady with a finish",eff:"Steady · RPE 3–4",wu:"5 min easy.",set:["40 min steady endurance.","Last 10 min a touch firmer (RPE 4–5), still controlled."],cd:"5 min easy.",cue:"Finishing rides slightly firm teaches you to stay strong when tired."},
+  {d:"Thu",t:"run",ti:"Tempo run",du:"35 min",foc:"Sustained effort",eff:"Tempo · RPE 5–6",wu:"10 min easy.",set:["15 min at tempo (comfortably hard, RPE 5–6) in the middle.","Ease into it, then hold steady."],cd:"10 min easy + stretch.",cue:"Tempo should feel repeatable — if you're fading, it was too fast."},
+  {d:"Fri",t:"swim",ti:"Technique swim",du:"30 min",foc:"Recover & refine",eff:"Easy · RPE 2",wu:"100m easy.",set:["6×50m relaxed with drills mixed in.","Focus on a clean, quiet stroke."],cd:"50m easy.",cue:"Swim quietly — splashing is wasted energy."},
+  {d:"Sat",t:"brick",ti:"Brick",du:"65 min",foc:"Longer run off the bike",eff:"Steady · RPE 3–4",wu:"Shoes ready.",set:["Bike 50 min steady.","Quick transition.","Run 15 min, settling into rhythm after the first km."],cd:"Walk + stretch.",cue:"Practice your real transition routine — helmet off, shoes on, race belt, go."},
+  {d:"Sun",t:"run",ti:"Long run",du:"40 min",foc:"Easy endurance",eff:"Easy · RPE 3",wu:"5 min walk/jog.",set:["40 min easy throughout.","Relaxed and steady — enjoy it."],cd:"Walk + stretch.",cue:"Drop your shoulders and relax — smooth running is efficient running."},
+ ]},
+ {p:"Recovery + build — sharpen the base",days:[
+  {d:"Mon",t:"rest",ti:"Rest",du:"",foc:"Recovery",note:"Rest or easy walk. Lighter week — keep the easy days easy."},
+  {d:"Tue",t:"swim",ti:"Swim · 750m",du:"35 min",foc:"Controlled race distance",eff:"Steady · RPE 4",wu:"150m easy.",set:["750m continuous at a controlled, repeatable pace.","Try to hold even 250m splits."],cd:"100m easy.",cue:"Practice sighting: lift your eyes and look forward a few times per length."},
+  {d:"Wed",t:"bike",ti:"Easy ride",du:"45 min",foc:"Recovery spin",eff:"Easy · RPE 2–3",wu:"5 min easy.",set:["35 min easy, light and smooth."],cd:"5 min easy.",cue:"High cadence, low force — spin the legs fresh."},
+  {d:"Thu",t:"run",ti:"Easy run",du:"30 min",foc:"Fresh legs",eff:"Easy · RPE 2–3",wu:"5 min walk/jog.",set:["25 min easy run.","Relaxed — legs should feel good by the weekend."],cd:"Walk + stretch.",cue:"If you feel great, resist speeding up. Save it for the weekend."},
+  {d:"Fri",t:"rest",ti:"Rest",du:"",foc:"Recovery",note:"Full rest. A firmer weekend is coming."},
+  {d:"Sat",t:"bike",ti:"Ride w/ efforts",du:"55 min",foc:"Race-effort intro",eff:"Firm · RPE 6–7 on efforts",wu:"10 min easy build.",set:["3×4 min at firm/race effort (RPE 6–7), 3 min easy between.","Rest of ride steady endurance."],cd:"5 min easy.",cue:"This is roughly how the bike leg will feel on race day — get familiar with it."},
+  {d:"Sun",t:"brick",ti:"Brick",du:"60 min",foc:"Longest run off bike yet",eff:"Steady · RPE 3–4",wu:"Shoes ready.",set:["Bike 40 min steady.","Quick transition.","Run 20 min easy off the bike."],cd:"Walk + stretch.",cue:"Break the run into 5-min chunks in your head — much easier to manage."},
+ ]},
+ {p:"Build to peak — race pieces",days:[
+  {d:"Mon",t:"rest",ti:"Rest",du:"",foc:"Recovery",note:"Rest or easy walk. Bigger sessions ahead — prioritize sleep."},
+  {d:"Tue",t:"swim",ti:"Swim · 750m+",du:"40 min",foc:"Race distance + extra",eff:"Steady · RPE 4",wu:"150m easy + drills.",set:["750m continuous, then 4×50m stronger with rest.","If open water is available, practice sighting every 6–8 strokes."],cd:"100m easy.",cue:"Sight low and quick — just eyes up, don't lift your whole head."},
+  {d:"Wed",t:"bike",ti:"Tempo ride",du:"55 min",foc:"Sustained race effort",eff:"Tempo/race · RPE 6",wu:"10 min easy build.",set:["3×6 min at race effort (RPE 6) with 3 min easy between.","Hold steady effort across all three."],cd:"6 min easy.",cue:"Aim for even efforts — resist going hard early and dying on the last one."},
+  {d:"Thu",t:"run",ti:"Interval run",du:"40 min",foc:"Strength at speed",eff:"Firm · RPE 7 on reps",wu:"10 min easy.",set:["5×2 min at a strong pace (RPE 7), 90s easy jog between.","Controlled and smooth, not sprinting."],cd:"8 min easy + stretch.",cue:"Same effort on the last rep as the first — that's the whole skill."},
+  {d:"Fri",t:"swim",ti:"Easy swim",du:"30 min",foc:"Loosen up",eff:"Easy · RPE 2",wu:"100m easy.",set:["6×50m easy with drills.","Keep it light and smooth."],cd:"50m easy.",cue:"An easy swim flushes the legs — treat it as active recovery."},
+  {d:"Sat",t:"brick",ti:"Big brick",du:"75 min",foc:"Rehearse race feel",eff:"Steady/race · RPE 4–6",wu:"Full transition set-up.",set:["Bike 55 min (mostly steady, last 10 min at race effort).","Quick transition.","Run 20 min — first 5 easy, then settle to steady."],cd:"Walk + stretch.",cue:"Practice your race-day fuel and drink on the bike so nothing's new on the day."},
+  {d:"Sun",t:"run",ti:"Long run",du:"45 min",foc:"Peak long run",eff:"Easy · RPE 3",wu:"5 min walk/jog.",set:["45 min easy — the longest run of the plan.","No pace pressure; just time on feet."],cd:"Walk + stretch.",cue:"Fuel a little beforehand and hydrate after — recovery is part of the run."},
+ ]},
+ {p:"Peak — biggest week",days:[
+  {d:"Mon",t:"rest",ti:"Rest",du:"",foc:"Recovery",note:"Rest or easy walk. This is your biggest week — respect the rest days."},
+  {d:"Tue",t:"swim",ti:"Swim · race sim",du:"45 min",foc:"Race-pace practice",eff:"Race · RPE 5–6",wu:"200m easy + 4×25m build.",set:["750m at intended race pace, controlled.","Then 100m easy + 4×25m relaxed."],cd:"100m easy.",cue:"Open water if you can — practice starting calm and settling your breath in the first 100m."},
+  {d:"Wed",t:"bike",ti:"Endurance ride",du:"60 min",foc:"Race-distance time",eff:"Steady · RPE 3–4",wu:"5 min easy.",set:["50 min steady — this covers roughly the 20km race distance.","Note your time over the distance if you can."],cd:"5 min easy.",cue:"This is your bike-leg dress rehearsal — pace it like you'd want to on race day."},
+  {d:"Thu",t:"run",ti:"Steady run",du:"40 min",foc:"Strong & controlled",eff:"Steady/tempo · RPE 5",wu:"10 min easy.",set:["25 min comfortably firm (RPE 5), controlled.","Strong but never straining."],cd:"5 min easy + stretch.",cue:"Controlled strength beats reckless speed — build confidence, not fatigue."},
+  {d:"Fri",t:"rest",ti:"Rest + core",du:"",foc:"Recovery + optional core",note:"Rest, or a light 10 min core session. Stay loose."},
+  {d:"Sat",t:"brick",ti:"Peak brick",du:"85 min",foc:"Dress rehearsal for the legs",eff:"Race · RPE 5–6",wu:"Full transition set-up.",set:["Bike 60 min (~20km) at steady-to-race effort.","Quick transition.","Run 25 min, settling to race effort after the first km."],cd:"Walk + stretch.",cue:"Closest thing to race day — rehearse everything: fuel, transition, pacing, mindset."},
+  {d:"Sun",t:"run",ti:"Easy run",du:"45 min",foc:"Recover from the big week",eff:"Easy · RPE 2–3",wu:"5 min walk/jog.",set:["45 min fully easy to shake out the big week.","Gentle and relaxed."],cd:"Walk + stretch.",cue:"Fully easy means fully easy — you earned the recovery."},
+ ]},
+ {p:"Peak — full race simulation",days:[
+  {d:"Mon",t:"rest",ti:"Rest",du:"",foc:"Recovery",note:"Rest or easy walk. Sharpen, don't grind, from here on."},
+  {d:"Tue",t:"swim",ti:"Swim · race pace",du:"40 min",foc:"Confident race pace",eff:"Race · RPE 5–6",wu:"200m easy + 4×25m build.",set:["750m at race effort, relaxed and confident.","Then 4×25m easy."],cd:"100m easy.",cue:"You've done this distance many times now — trust it and stay smooth."},
+  {d:"Wed",t:"bike",ti:"Race-pace ride",du:"50 min",foc:"Dial in bike effort",eff:"Race · RPE 6",wu:"10 min easy build.",set:["30 min at race effort (break as 2×15 min if needed).","Learn exactly what 20km-race pace feels like."],cd:"5 min easy.",cue:"Memorize this effort — it's what you'll hold on race day."},
+  {d:"Thu",t:"run",ti:"Race-pace run",du:"35 min",foc:"Goal 5k feel",eff:"Race · RPE 6",wu:"10 min easy.",set:["10 min at goal 5k effort (RPE 6) in the middle.","Easy either side."],cd:"10 min easy + stretch.",cue:"Off-the-bike legs feel different — this is the pace you'll aim for after T2."},
+  {d:"Fri",t:"swim",ti:"Easy swim",du:"25 min",foc:"Loosen up",eff:"Easy · RPE 2",wu:"100m easy.",set:["5×50m easy, smooth.","Nothing hard."],cd:"50m easy.",cue:"Light and relaxed — you're topping off, not adding fitness now."},
+  {d:"Sat",t:"brick",ti:"RACE SIMULATION",du:"~90 min",foc:"Full dry-run, together",eff:"Race · RPE 5–6",wu:"Set up transition exactly like race day.",set:["Swim 750m.","T1 → Bike 20km.","T2 → Run 3km.","Back-to-back, transitions and all — do it as a team."],cd:"Easy walk + stretch + refuel.",cue:"Treat it like the real thing: gear layout, fueling, pacing, mindset. Debrief together after."},
+  {d:"Sun",t:"run",ti:"Easy run",du:"40 min",foc:"Recovery jog",eff:"Easy · RPE 2–3",wu:"5 min walk/jog.",set:["40 min easy recovery jog.","Celebrate that rehearsal."],cd:"Walk + stretch.",cue:"Note anything you'd tweak for race day — gear, food, pacing — while it's fresh."},
+ ]},
+ {p:"Taper begins — stay sharp, drop volume",days:[
+  {d:"Mon",t:"rest",ti:"Rest",du:"",foc:"Recovery",note:"Rest or easy walk. Volume drops now so you arrive fresh and strong — trust the taper."},
+  {d:"Tue",t:"swim",ti:"Swim sharpener",du:"35 min",foc:"Sharp but rested",eff:"Easy w/ pickups · RPE 5 on pickups",wu:"200m easy.",set:["Easy 750m (broken as you like) with 4×25m quick pickups sprinkled in.","Feel smooth and snappy, not tired."],cd:"100m easy.",cue:"Taper swims wake the body up — quality touches, low fatigue."},
+  {d:"Wed",t:"bike",ti:"Ride w/ efforts",du:"45 min",foc:"Keep legs snappy",eff:"Race · RPE 6 on efforts",wu:"10 min easy.",set:["4×90 sec at race effort (RPE 6), 2 min easy between.","Rest of ride easy."],cd:"5 min easy.",cue:"Short efforts keep sharpness without digging a fatigue hole."},
+  {d:"Thu",t:"run",ti:"Run w/ strides",du:"30 min",foc:"Light & quick",eff:"Easy w/ strides · RPE 6 on strides",wu:"10 min easy.",set:["4×20 sec strides (quick, relaxed, controlled), walk back between.","Rest easy."],cd:"5 min easy + stretch.",cue:"Strides are fast feet, not hard effort — stay smooth and tall."},
+  {d:"Fri",t:"rest",ti:"Rest",du:"",foc:"Recovery",note:"Full rest. Legs should be feeling springy again."},
+  {d:"Sat",t:"brick",ti:"Mini brick",du:"55 min",foc:"Final transition rehearsal",eff:"Steady/race · RPE 4–6",wu:"Shoes ready.",set:["Bike 40 min mostly easy with a few race-effort minutes.","Quick transition.","Run 15 min easy, last 3 min at race effort."],cd:"Walk + stretch.",cue:"Nail your transition routine one last time so it's automatic on race day."},
+  {d:"Sun",t:"run",ti:"Easy run",du:"30 min",foc:"Relaxed",eff:"Easy · RPE 2–3",wu:"5 min walk/jog.",set:["30 min easy.","Volume's dropping — that's the plan working."],cd:"Walk + stretch.",cue:"Resist the urge to 'test' your fitness. It's there. Save it."},
+ ]},
+ {p:"Race week — rest up and go get it",days:[
+  {d:"Mon",t:"rest",ti:"Rest",du:"",foc:"Recovery",note:"Full rest or an easy walk. Sleep and hydration are your training this week."},
+  {d:"Tue",t:"swim",ti:"Short swim",du:"20 min",foc:"Feel the water",eff:"Easy w/ pickups · RPE 5",wu:"100m easy.",set:["Easy swim with 4×25m race-pace pickups.","Stay loose and relaxed."],cd:"50m easy.",cue:"Just a touch — you're staying sharp, not building anything now."},
+  {d:"Wed",t:"bike",ti:"Short spin",du:"30 min",foc:"Keep legs awake",eff:"Race · RPE 6 on efforts",wu:"8 min easy.",set:["3×1 min at race effort (RPE 6), easy spin between.","Rest easy."],cd:"5 min easy.",cue:"Give the bike a once-over while you're at it — tires, brakes, gears."},
+  {d:"Thu",t:"run",ti:"Shakeout run",du:"20 min",foc:"Loosen up",eff:"Easy w/ strides · RPE 6 on strides",wu:"5 min easy.",set:["Easy jog with 3×20 sec strides.","Then rest those legs completely."],cd:"Walk + stretch.",cue:"Last real touch — short and easy. Trust your training now."},
+  {d:"Fri",t:"rest",ti:"Rest + prep",du:"",foc:"Prep day",note:"Rest. Lay out your gear, check the bike, hydrate through the day, eat well, get to bed early. Write a simple transition checklist."},
+  {d:"Sat",t:"run",ti:"Openers",du:"15 min",foc:"Wake up the body",eff:"Easy w/ 2–3 pickups · RPE 5–6",wu:"Very short and easy.",set:["A short, easy swim, spin, OR jog (10–15 min) with 2–3 short pickups.","Loosen up — that's all."],cd:"Light stretch.",cue:"Openers shake off stiffness and nerves. Do not do more than this."},
+  {d:"Sun",t:"race",ti:"🏁 RACE DAY",du:"Sprint Tri",foc:"Start calm, ride steady, run proud",eff:"Race · RPE 6–7",wu:"If allowed, an easy swim or jog before the start. Relax and breathe.",set:["Swim 750m — start calm, settle your breathing in the first 100m.","T1 → Bike 20km — steady and controlled, don't blow up.","T2 → Run 5km — run your own race, build if you feel good.","Cross the line together."],cd:"Celebrate. You did it.",cue:"Everything you'll feel today, you've already rehearsed. Trust the work and enjoy it."},
+ ]},
+];
+
+/* ---------- STATE ---------- */
+const LKEY='tri_local_v2';
+let state={names:{mike:"Mike",taylor:"Taylor"},done:{mike:{},taylor:{}},start:todayISO(),active:'mike'};
+let ui={week:1,tab:'plan',open:{}};
+let cloud=null;
+
+function todayISO(){return new Date().toISOString().slice(0,10);}
+function lsGet(k){try{return localStorage.getItem(k);}catch(e){return null;}}
+function lsSet(k,v){try{localStorage.setItem(k,v);}catch(e){}}
+
+function saveLocal(){lsSet(LKEY,JSON.stringify(state));}
+function loadLocal(){
+  try{const r=lsGet(LKEY);if(r){const s=JSON.parse(r);
+    state={...state,...s,names:{mike:"Mike",taylor:"Taylor"},
+      done:{mike:{...(s.done?.mike||{})},taylor:{...(s.done?.taylor||{})}}};}}catch(e){}
+  const dp=lsGet('tri_device_athlete');
+  if(dp==='mike'||dp==='taylor')state.active=dp;
+}
+
+/* ---------- CLOUD SYNC ---------- */
+async function initCloud(){
+  if(!FB.apiKey||FB.apiKey.indexOf('PASTE')>-1)return null;
+  try{
+    const appMod=await import('https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js');
+    const fsMod=await import('https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js');
+    const app=appMod.initializeApp(FB);
+    const db=fsMod.getFirestore(app);
+    const ref=fsMod.doc(db,'plans',SYNC_CODE);
+    return {ref,setDoc:fsMod.setDoc,updateDoc:fsMod.updateDoc,onSnapshot:fsMod.onSnapshot,deleteField:fsMod.deleteField};
+  }catch(e){console.warn('Cloud sync unavailable, using this device only:',e);return null;}
+}
+function setSync(mode){
+  const p=document.getElementById('sync'),t=document.getElementById('synctxt');
+  p.className='syncpill '+(mode==='cloud'?'live':'local');
+  t.textContent=mode==='cloud'?'Synced':'This device';
+}
+
+/* ---------- HELPERS ---------- */
+const $=s=>document.querySelector(s);
+function cap(s){return s.charAt(0).toUpperCase()+s.slice(1);}
+function keyFor(w,d){return 'w'+w+'d'+d;}
+function isDone(a,w,d){return state.done[a][keyFor(w,d)]===true;}
+function activeSessions(){let n=0;PLAN.forEach(wk=>wk.days.forEach(d=>{if(d.t!=='rest')n++;}));return n;}
+function doneCount(a){let n=0;PLAN.forEach((wk,wi)=>wk.days.forEach((d,di)=>{if(d.t!=='rest'&&isDone(a,wi+1,di))n++;}));return n;}
+function weekComplete(a,w){return PLAN[w-1].days.every((d,di)=>d.t==='rest'||isDone(a,w,di));}
+function currentWeek(){
+  const start=new Date(state.start+'T00:00:00'),now=new Date();
+  const diff=Math.floor((now-start)/(864e5));
+  return Math.min(12,Math.max(1,Math.floor(diff/7)+1));
+}
+function daysToRace(){
+  const start=new Date(state.start+'T00:00:00');
+  const race=new Date(start.getTime()+83*864e5);
+  return Math.ceil((race-new Date())/864e5);
+}
+function escapeHtml(s){return String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));}
+
+/* ---------- CLOUD WRITE ---------- */
+function pushField(path,value){
+  if(!cloud)return;
+  cloud.updateDoc(cloud.ref,{[path]:value}).catch(()=>{
+    const seed={names:state.names,start:state.start,done:{mike:{},taylor:{}}};
+    cloud.setDoc(cloud.ref,seed,{merge:true}).then(()=>cloud.updateDoc(cloud.ref,{[path]:value})).catch(()=>{});
+  });
+}
+
+/* ---------- RENDER: athletes ---------- */
+function renderWho(){
+  const total=activeSessions(),el=$('#who');el.innerHTML='';
+  ['mike','taylor'].forEach(a=>{
+    const pc=total?Math.round(doneCount(a)/total*100):0;
+    const b=document.createElement('button');
+    b.className=a+(state.active===a?' on':'');
+    b.innerHTML=`<div class="nm">${escapeHtml(state.names[a])}</div><div class="pc">${pc}% · ${doneCount(a)}/${total} done</div>`;
+    b.onclick=()=>{state.active=a;lsSet('tri_device_athlete',a);renderAll();};
+    el.appendChild(b);
+  });
+}
+
+/* ---------- RENDER: week rail ---------- */
+function renderRail(){
+  const cur=currentWeek(),el=$('#rail');el.innerHTML='';
+  PLAN.forEach((wk,i)=>{
+    const w=i+1,x=document.createElement('div');
+    x.className='wk'+(ui.week===w?' on':'')+(cur===w?' cur':'')+(weekComplete(state.active,w)?' done':'')+(w===12?' race':'');
+    x.innerHTML=`<div class="n">${w===12?'🏁':w}</div><div class="b">${w===12?'Race':'Wk'}</div><div class="dot"></div>`;
+    x.onclick=()=>{ui.week=w;renderRail();renderDays();};
+    el.appendChild(x);
+  });
+  const on=el.children[ui.week-1];
+  if(on)on.scrollIntoView({inline:'center',block:'nearest',behavior:'smooth'});
+}
+
+/* ---------- RENDER: days (expandable) ---------- */
+function renderDays(){
+  const wk=PLAN[ui.week-1];
+  $('#phase').innerHTML=`<b>Week ${ui.week}</b> · ${wk.p}`;
+  const el=$('#days');el.innerHTML='';
+  wk.days.forEach((day,di)=>{
+    const key=ui.week+'-'+di;
+    const done=isDone(state.active,ui.week,di);
+    const c=document.createElement('div');
+    c.className='card '+day.t+(day.t==='rest'?' rest':'')+(ui.open[key]?' open':'');
+    const tag=day.t==='race'?'Race':cap(day.t);
+    let detail;
+    if(day.t==='rest'){
+      detail=`<div class="detin"><div class="block"><p>${day.note||'Full rest.'}</p></div></div>`;
+    }else{
+      const lis=(day.set||[]).map(s=>`<li>${s}</li>`).join('');
+      detail=`<div class="detin">
+        ${day.eff?`<span class="eff">${day.eff}</span>`:''}
+        ${day.wu?`<div class="block"><span class="bl">Warm-up</span><p>${day.wu}</p></div>`:''}
+        ${lis?`<div class="block"><span class="bl">Main set</span><ul>${lis}</ul></div>`:''}
+        ${day.cd?`<div class="block"><span class="bl">Cool-down</span><p>${day.cd}</p></div>`:''}
+        ${day.cue?`<div class="cue">💡 ${day.cue}</div>`:''}
+      </div>`;
+    }
+    const moreLabel=day.t==='rest'?'Recovery note':(day.t==='race'?'Race plan':'Workout details');
+    c.innerHTML=`
+      <div class="top">
+        <div class="dayhd">
+          <div class="drow"><span class="dlab">${day.d}</span><span class="tag ${day.t}">${tag}</span>${day.du?`<span class="ddur">${day.du}</span>`:''}</div>
+          <div class="dtitle">${day.ti}</div>
+          ${day.foc?`<div class="ddet">${day.foc}</div>`:''}
+          <span class="more"><span>${moreLabel}</span><svg class="chev" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></span>
+        </div>
+        <div class="chk ${day.t==='rest'?'na':''} ${done?'on':''}"><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg></div>
+      </div>
+      <div class="detail">${detail}</div>`;
+    c.querySelector('.top').onclick=()=>{
+      ui.open[key]=!ui.open[key];
+      c.classList.toggle('open',!!ui.open[key]);
+    };
+    if(day.t!=='rest'){
+      const chk=c.querySelector('.chk');
+      chk.onclick=(e)=>{
+        e.stopPropagation();
+        const a=state.active,k=keyFor(ui.week,di),was=isDone(a,ui.week,di);
+        if(was)delete state.done[a][k];else state.done[a][k]=true;
+        saveLocal();
+        pushField('done.'+a+'.'+k, was?(cloud?cloud.deleteField():null):true);
+        chk.classList.toggle('on',!was);
+        renderRail();renderWho();
+      };
+    }
+    el.appendChild(c);
+  });
+}
+
+/* ---------- RENDER: progress ---------- */
+function renderProgress(){
+  const a=state.active,total=activeSessions(),done=doneCount(a);
+  const pc=total?Math.round(done/total*100):0;
+  const circ=2*Math.PI*42,off=circ*(1-pc/100);
+  const disc={swim:[0,0],bike:[0,0],run:[0,0],brick:[0,0]};
+  PLAN.forEach((wk,wi)=>wk.days.forEach((d,di)=>{if(disc[d.t]){disc[d.t][1]++;if(isDone(a,wi+1,di))disc[d.t][0]++;}}));
+  const cvar={swim:'--swim',bike:'--bike',run:'--run',brick:'--brick'};
+  const dtr=daysToRace();
+  const accent=a==='mike'?'--swim':'--run';
+  $('#pg').innerHTML=`
+    <div class="ring">
+      <svg viewBox="0 0 100 100">
+        <circle cx="50" cy="50" r="42" fill="none" stroke="var(--panel2)" stroke-width="9"/>
+        <circle cx="50" cy="50" r="42" fill="none" stroke="var(${accent})" stroke-width="9" stroke-linecap="round"
+          stroke-dasharray="${circ}" stroke-dashoffset="${off}" transform="rotate(-90 50 50)" style="transition:stroke-dashoffset .6s"/>
+      </svg>
+      <div class="info"><h3>${pc}%</h3><p>${escapeHtml(state.names[a])} · <span class="of">${done} of ${total} sessions</span></p></div>
+    </div>
+    <div class="count">
+      <div class="big">${dtr>0?dtr:(dtr===0?'0':'✓')}</div>
+      <div class="lb">${dtr>1?'Days to race day':dtr===1?'Day to race day':dtr===0?'Race day is today':'Race day passed — go you'}</div>
+    </div>
+    <div class="grid">
+      <div class="stat"><div class="k">Current week</div><div class="v">${currentWeek()}<small> / 12</small></div></div>
+      <div class="stat"><div class="k">Weeks complete</div><div class="v">${[1,2,3,4,5,6,7,8,9,10,11,12].filter(w=>weekComplete(a,w)).length}<small> / 12</small></div></div>
+    </div>
+    <div class="disc">${['swim','bike','run','brick'].map(t=>{
+        const[c1,c2]=disc[t],p=c2?Math.round(c1/c2*100):0;
+        return `<div class="dr"><span class="lb" style="color:var(${cvar[t]})">${cap(t)}</span>
+          <span class="bar"><i style="width:${p}%;background:var(${cvar[t]})"></i></span><span class="ct">${c1}/${c2}</span></div>`;
+      }).join('')}</div>
+    <div class="datefield"><label>Start date (Monday of week 1)</label><input type="date" id="startd" value="${state.start}"></div>
+    <p class="rally"><b>${escapeHtml(state.names.mike)}</b> ${total?Math.round(doneCount('mike')/total*100):0}% &nbsp;·&nbsp; <b>${escapeHtml(state.names.taylor)}</b> ${total?Math.round(doneCount('taylor')/total*100):0}% — you're in this together.</p>`;
+  const sd=$('#startd');
+  if(sd)sd.onchange=e=>{state.start=e.target.value;saveLocal();pushField('start',e.target.value);renderRail();renderProgress();};
+}
+
+/* ---------- TABS ---------- */
+function setTab(t){
+  ui.tab=t;
+  $('#plan').classList.toggle('hidden',t!=='plan');
+  $('#pg').style.display=t==='pg'?'flex':'none';
+  $('#gd').style.display=t==='gd'?'flex':'none';
+  document.querySelectorAll('nav button').forEach(b=>b.classList.toggle('on',b.dataset.t===t));
+  if(t==='pg')renderProgress();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+document.querySelectorAll('nav button').forEach(b=>b.onclick=()=>setTab(b.dataset.t));
+
+$('#reset').onclick=()=>{
+  if(confirm('Reset all workout progress for both of you? This cannot be undone.')){
+    state.done={mike:{},taylor:{}};saveLocal();
+    if(cloud)cloud.setDoc(cloud.ref,{names:state.names,start:state.start,done:{mike:{},taylor:{}}}).catch(()=>{});
+    renderAll();setTab('plan');
+  }
+};
+
+/* ---------- BOOT ---------- */
+function renderAll(){renderWho();renderRail();renderDays();if(ui.tab==='pg')renderProgress();}
+(async function(){
+  loadLocal();
+  ui.week=currentWeek();
+  renderAll();
+  cloud=await initCloud();
+  if(cloud){
+    setSync('cloud');
+    cloud.setDoc(cloud.ref,{names:state.names,start:state.start},{merge:true}).catch(()=>{});
+    cloud.onSnapshot(cloud.ref,snap=>{
+      const d=snap.data();if(!d)return;
+      if(d.start)state.start=d.start;
+      state.done.mike=d.done&&d.done.mike?d.done.mike:{};
+      state.done.taylor=d.done&&d.done.taylor?d.done.taylor:{};
+      saveLocal();
+      ui.week=currentWeek();
+      renderAll();
+    },err=>{console.warn('Snapshot error:',err);setSync('local');});
+  }else{
+    setSync('local');
+  }
+})();
+</script>
+<script>
+/* Register service worker for offline / installable app. Ignored if unsupported. */
+if('serviceWorker' in navigator){
+  window.addEventListener('load',()=>{navigator.serviceWorker.register('sw.js').catch(()=>{});});
+}
+</script>
+</body>
+</html>
