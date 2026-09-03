@@ -2,7 +2,7 @@
    Caches the static files so the app opens without a connection.
    Cross-origin requests (Firebase SDK + Firestore sync) are NOT
    intercepted, so live sync always uses the network. */
-const CACHE = 'ttl-v1';
+const CACHE = 'ttl-v2';
 const SHELL = [
   './',
   './index.html',
