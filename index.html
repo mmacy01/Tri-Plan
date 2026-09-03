@@ -21,7 +21,7 @@
   --line:#2A303C; --line2:#353C4A;
   --ink:#EAF0F7; --mut:#8B95A6; --mut2:#616B7C;
   --swim:#35C4E8; --bike:#F5A524; --run:#FF6B5B; --brick:#A780FF; --rest:#5A6472;
-  --gold:#FFD166; --sync:#4ADE80;
+  --gold:#FFD166; --sync:#4ADE80; --str:#5ED39E;
   --disp:'Space Grotesk',system-ui,-apple-system,sans-serif;
   --body:'Inter',system-ui,-apple-system,'Segoe UI',sans-serif;
 }
@@ -80,6 +80,7 @@ header{padding:18px 18px 12px;position:sticky;top:0;z-index:20;
 .card.swim::before{background:var(--swim)} .card.bike::before{background:var(--bike)}
 .card.run::before{background:var(--run)} .card.brick::before{background:var(--brick)}
 .card.race::before{background:var(--gold)}
+.card.str::before{background:var(--str)}
 .card.rest{opacity:.82}
 .top{display:flex;gap:13px;align-items:flex-start;padding:14px 14px 14px 16px;cursor:pointer}
 .dayhd{flex:1;min-width:0}
@@ -87,7 +88,7 @@ header{padding:18px 18px 12px;position:sticky;top:0;z-index:20;
 .dlab{font-size:10px;font-weight:700;letter-spacing:.13em;text-transform:uppercase;color:var(--mut2)}
 .tag{font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:2px 7px;border-radius:20px;color:var(--bg)}
 .tag.swim{background:var(--swim)} .tag.bike{background:var(--bike)} .tag.run{background:var(--run)}
-.tag.brick{background:var(--brick)} .tag.rest{background:var(--rest);color:var(--ink)} .tag.race{background:var(--gold)}
+.tag.brick{background:var(--brick)} .tag.rest{background:var(--rest);color:var(--ink)} .tag.race{background:var(--gold)} .tag.str{background:var(--str);color:var(--bg)}
 .dtitle{font-family:var(--disp);font-weight:600;font-size:15px;letter-spacing:-.2px;margin:0 0 3px}
 .ddur{font-size:11px;color:var(--mut2);font-weight:600;font-variant-numeric:tabular-nums}
 .ddet{font-size:12.5px;color:var(--mut);margin-top:2px}
@@ -107,6 +108,15 @@ header{padding:18px 18px 12px;position:sticky;top:0;z-index:20;
 .card.race .chk.on{background:var(--gold);border-color:var(--gold)}
 .chk.on svg{opacity:1}
 .chk.na{opacity:.3;pointer-events:none;border-style:dashed}
+.slog{flex:none;display:flex;align-items:center;gap:3px;margin-top:1px}
+.slog button{width:28px;height:28px;border-radius:8px;border:1px solid var(--line2);background:var(--panel2);
+  color:var(--ink);font-size:17px;font-weight:600;cursor:pointer;display:grid;place-items:center;line-height:1;font-family:var(--body)}
+.slog button:active{background:var(--line)}
+.slog button.sinc{border-color:var(--str);color:var(--str)}
+.slog button[disabled]{opacity:.3;pointer-events:none}
+.slog .scount{min-width:22px;text-align:center;font-family:var(--disp);font-weight:700;font-size:15px;
+  font-variant-numeric:tabular-nums;color:var(--str)}
+.stnote{font-size:11.5px;color:var(--mut2);text-align:center;padding:2px 8px 4px}
 
 .detail{max-height:0;overflow:hidden;transition:max-height .32s ease}
 .card.open .detail{max-height:1200px}
@@ -172,7 +182,7 @@ nav{position:fixed;bottom:0;left:0;right:0;z-index:30;display:flex;justify-conte
   background:linear-gradient(0deg,var(--bg) 78%,rgba(18,21,28,0));padding:8px 0 max(10px,env(safe-area-inset-bottom))}
 .navin{display:flex;gap:4px;background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:5px;box-shadow:0 8px 30px rgba(0,0,0,.4)}
 nav button{background:none;border:none;color:var(--mut2);font-family:var(--body);font-weight:600;font-size:12px;
-  padding:9px 20px;border-radius:11px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:3px;transition:.15s}
+  padding:9px 15px;border-radius:11px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:3px;transition:.15s}
 nav button svg{width:19px;height:19px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
 nav button.on{color:var(--ink);background:var(--panel2)}
 .hidden{display:none!important}
@@ -263,10 +273,21 @@ nav button.on{color:var(--ink);background:var(--panel2)}
     <p class="note">General fitness guidance for healthy beginners, not medical advice. Check with your doctor before starting — especially coming back from surgery or injury.</p>
   </section>
 
+  <section class="gd" id="st">
+    <div class="gcard">
+      <h4><span class="pin" style="background:var(--str)"></span>Optional strength workouts</h4>
+      <p>Four strength sessions to fold into your week whenever it suits you — any day, no fixed schedule, totally optional. They're not part of the 12-week checklist; use them as much or as little as you like as you get deeper into training.</p>
+      <p>A good rhythm is 1–2 a week. Ideally do them on an easier day, and try not to lift heavy the day before a long brick or long run so those stay fresh. Tap any session for the full breakdown; use −/＋ to log how many times each of you has done it.</p>
+    </div>
+    <div class="days" id="stcards"></div>
+    <p class="stnote">Ease into loaded movements, form over weight — and get a doctor's OK before heavy lifting if you're coming back from surgery or injury.</p>
+  </section>
+
   <nav>
     <div class="navin">
       <button data-t="plan" class="on"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M3 9h18M8 2v4M16 2v4"/></svg>Plan</button>
       <button data-t="pg"><svg viewBox="0 0 24 24"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg>Progress</button>
+      <button data-t="st"><svg viewBox="0 0 24 24"><path d="M6.5 6.5v11M17.5 6.5v11M4 9v6M20 9v6M6.5 12h11"/></svg>Strength</button>
       <button data-t="gd"><svg viewBox="0 0 24 24"><path d="M12 3v18M5 7h14M7 11l-3 4h6zM17 11l-3 4h6z"/></svg>Guide</button>
     </div>
   </nav>
@@ -278,12 +299,12 @@ nav button.on{color:var(--ink);background:var(--panel2)}
    (See README.md for the full step-by-step.)
    ============================================================ */
 const FB = {
-  apiKey:            "AIzaSyD53NvhpAJNN1HRMLYXClISV_VsfVbNtR8",
-  authDomain:        "triathlon-training-sprint.firebaseapp.com",
-  projectId:         "triathlon-training-sprint",
-  storageBucket:     "triathlon-training-sprint.firebasestorage.app",
-  messagingSenderId: "875778937726",
-  appId:             "1:875778937726:web:6f691088aa15a333ee992f"
+  apiKey:            "PASTE_API_KEY",
+  authDomain:        "PASTE_PROJECT.firebaseapp.com",
+  projectId:         "PASTE_PROJECT_ID",
+  storageBucket:     "PASTE_PROJECT.appspot.com",
+  messagingSenderId: "PASTE_SENDER_ID",
+  appId:             "PASTE_APP_ID"
 };
 const SYNC_CODE = "mike-taylor-sprint-2026";
 /* ============================================================ */
@@ -402,9 +423,33 @@ const PLAN=[
  ]},
 ];
 
+/* ---------- OPTIONAL STRENGTH WORKOUTS (day-agnostic) ---------- */
+const STRENGTH=[
+ {id:"s1",ti:"Full Body A",du:"30–40 min",foc:"The staple full-body session",eff:"Moderate · leave 2–3 reps in the tank",
+  wu:"5 min easy: leg swings, 10 bodyweight squats, arm circles, hip openers.",
+  set:["Goblet squat — 3×10–12 (hold a dumbbell/kettlebell at your chest).","Romanian deadlift (dumbbells) — 3×10 (hinge at the hips, flat back).","Push-up, or incline push-up — 3×8–12.","One-arm dumbbell row — 3×10 each side.","Calf raises — 3×15.","Front plank — 3×30–45 sec."],
+  cd:"5 min stretch: hip flexors, quads, chest, calves.",
+  cue:"Control the lowering phase of every rep — that's where strength and tendon resilience are built. Form over weight, always."},
+ {id:"s2",ti:"Full Body B",du:"30–40 min",foc:"Full-body with a single-leg focus",eff:"Moderate · smooth, controlled reps",
+  wu:"5 min easy: walking lunges, 10 glute bridges, band pull-aparts.",
+  set:["Reverse lunge — 3×8–10 each leg (dumbbells optional).","Single-leg Romanian deadlift — 3×8 each leg (balance + hamstrings).","Dumbbell shoulder press — 3×10.","Assisted pull-up, lat pulldown, or band row — 3×8–10.","Step-ups onto a bench — 3×10 each leg.","Side plank — 3×20–30 sec each side."],
+  cd:"5 min stretch: glutes, hamstrings, shoulders.",
+  cue:"On the single-leg moves, go slow and own the balance — that stability is exactly what protects you on the run."},
+ {id:"s3",ti:"Lower Body Power & Hips",du:"30–35 min",foc:"Cycling/running power + hip stability",eff:"Moderate–firm · strong but clean",
+  wu:"5 min: bodyweight squats, glute bridges, lateral band walks.",
+  set:["Hip thrust or glute bridge — 3×12 (drive through the heels, squeeze glutes).","Bulgarian split squat — 3×8 each leg (rear foot on a bench).","Calf raises, single-leg if able — 3×12 each side.","Lateral band walks — 3×10 steps each way.","Clamshells — 3×15 each side.","Dead bug — 3×8 each side."],
+  cd:"5 min stretch: hips, glutes, calves.",
+  cue:"Strong glutes and hips are your best defense against knee and IT-band trouble as the run mileage climbs."},
+ {id:"s4",ti:"Core & Stability",du:"20–25 min",foc:"Durability, balance & injury-prevention",eff:"Light–moderate · quality holds, fine to do often",
+  wu:"3–5 min easy: cat-cow, a few bird-dogs, gentle twists.",
+  set:["Front plank — 3×30–60 sec.","Side plank — 3×20–40 sec each side.","Bird-dog — 3×10 each side (slow, no wobble).","Dead bug — 3×10 each side.","Single-leg balance — 3×30 sec each leg (close your eyes to progress).","Glute bridge march — 3×10 each side."],
+  cd:"Gentle full-body stretch.",
+  cue:"This is the lightest session — you can slot it in more often, even on easy days. Steady, controlled, and don't hold your breath."},
+];
+
 /* ---------- STATE ---------- */
 const LKEY='tri_local_v2';
-let state={names:{mike:"Mike",taylor:"Taylor"},done:{mike:{},taylor:{}},start:todayISO(),active:'mike'};
+let state={names:{mike:"Mike",taylor:"Taylor"},done:{mike:{},taylor:{}},strength:{mike:{},taylor:{}},start:todayISO(),active:'mike'};
 let ui={week:1,tab:'plan',open:{}};
 let cloud=null;
 
@@ -416,7 +461,8 @@ function saveLocal(){lsSet(LKEY,JSON.stringify(state));}
 function loadLocal(){
   try{const r=lsGet(LKEY);if(r){const s=JSON.parse(r);
     state={...state,...s,names:{mike:"Mike",taylor:"Taylor"},
-      done:{mike:{...(s.done?.mike||{})},taylor:{...(s.done?.taylor||{})}}};}}catch(e){}
+      done:{mike:{...(s.done?.mike||{})},taylor:{...(s.done?.taylor||{})}},
+      strength:{mike:{...(s.strength?.mike||{})},taylor:{...(s.strength?.taylor||{})}}};}}catch(e){}
   const dp=lsGet('tri_device_athlete');
   if(dp==='mike'||dp==='taylor')state.active=dp;
 }
@@ -463,7 +509,7 @@ function escapeHtml(s){return String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'
 function pushField(path,value){
   if(!cloud)return;
   cloud.updateDoc(cloud.ref,{[path]:value}).catch(()=>{
-    const seed={names:state.names,start:state.start,done:{mike:{},taylor:{}}};
+    const seed={names:state.names,start:state.start,done:{mike:{},taylor:{}},strength:{mike:{},taylor:{}}};
     cloud.setDoc(cloud.ref,seed,{merge:true}).then(()=>cloud.updateDoc(cloud.ref,{[path]:value})).catch(()=>{});
   });
 }
@@ -595,22 +641,70 @@ function setTab(t){
   $('#plan').classList.toggle('hidden',t!=='plan');
   $('#pg').style.display=t==='pg'?'flex':'none';
   $('#gd').style.display=t==='gd'?'flex':'none';
+  $('#st').style.display=t==='st'?'flex':'none';
   document.querySelectorAll('nav button').forEach(b=>b.classList.toggle('on',b.dataset.t===t));
   if(t==='pg')renderProgress();
+  if(t==='st')renderStrength();
   window.scrollTo({top:0,behavior:'smooth'});
 }
 document.querySelectorAll('nav button').forEach(b=>b.onclick=()=>setTab(b.dataset.t));
 
 $('#reset').onclick=()=>{
   if(confirm('Reset all workout progress for both of you? This cannot be undone.')){
-    state.done={mike:{},taylor:{}};saveLocal();
-    if(cloud)cloud.setDoc(cloud.ref,{names:state.names,start:state.start,done:{mike:{},taylor:{}}}).catch(()=>{});
+    state.done={mike:{},taylor:{}};state.strength={mike:{},taylor:{}};saveLocal();
+    if(cloud)cloud.setDoc(cloud.ref,{names:state.names,start:state.start,done:{mike:{},taylor:{}},strength:{mike:{},taylor:{}}}).catch(()=>{});
     renderAll();setTab('plan');
   }
 };
 
 /* ---------- BOOT ---------- */
-function renderAll(){renderWho();renderRail();renderDays();if(ui.tab==='pg')renderProgress();}
+function renderStrength(){
+  const el=$('#stcards');if(!el)return;el.innerHTML='';
+  const a=state.active;
+  STRENGTH.forEach((w,i)=>{
+    const key='s-'+i;
+    const n=(state.strength[a]&&state.strength[a][w.id])||0;
+    const c=document.createElement('div');
+    c.className='card str'+(ui.open[key]?' open':'');
+    const lis=(w.set||[]).map(s=>`<li>${s}</li>`).join('');
+    const detail=`<div class="detin">
+      ${w.eff?`<span class="eff">${w.eff}</span>`:''}
+      ${w.wu?`<div class="block"><span class="bl">Warm-up</span><p>${w.wu}</p></div>`:''}
+      ${lis?`<div class="block"><span class="bl">Main set</span><ul>${lis}</ul></div>`:''}
+      ${w.cd?`<div class="block"><span class="bl">Cool-down</span><p>${w.cd}</p></div>`:''}
+      ${w.cue?`<div class="cue">💡 ${w.cue}</div>`:''}
+    </div>`;
+    c.innerHTML=`
+      <div class="top">
+        <div class="dayhd">
+          <div class="drow"><span class="tag str">Strength</span><span class="ddur">${w.du}</span></div>
+          <div class="dtitle">${w.ti}</div>
+          <div class="ddet">${w.foc}</div>
+          <span class="more"><span>Workout details</span><svg class="chev" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></span>
+        </div>
+        <div class="slog">
+          <button class="sdec" ${n<=0?'disabled':''}>−</button>
+          <span class="scount">${n}</span>
+          <button class="sinc">＋</button>
+        </div>
+      </div>
+      <div class="detail">${detail}</div>`;
+    c.querySelector('.top').onclick=()=>{ui.open[key]=!ui.open[key];c.classList.toggle('open',!!ui.open[key]);};
+    const inc=c.querySelector('.sinc'),dec=c.querySelector('.sdec'),cnt=c.querySelector('.scount');
+    function setN(v){
+      v=Math.max(0,v);
+      if(!state.strength[a])state.strength[a]={};
+      if(v===0)delete state.strength[a][w.id];else state.strength[a][w.id]=v;
+      saveLocal();
+      pushField('strength.'+a+'.'+w.id, v===0?(cloud?cloud.deleteField():null):v);
+      cnt.textContent=v;dec.disabled=v<=0;
+    }
+    inc.onclick=(e)=>{e.stopPropagation();setN(((state.strength[a]&&state.strength[a][w.id])||0)+1);};
+    dec.onclick=(e)=>{e.stopPropagation();setN(((state.strength[a]&&state.strength[a][w.id])||0)-1);};
+    el.appendChild(c);
+  });
+}
+function renderAll(){renderWho();renderRail();renderDays();if(ui.tab==='pg')renderProgress();if(ui.tab==='st')renderStrength();}
 (async function(){
   loadLocal();
   ui.week=currentWeek();
@@ -624,6 +718,8 @@ function renderAll(){renderWho();renderRail();renderDays();if(ui.tab==='pg')rend
       if(d.start)state.start=d.start;
       state.done.mike=d.done&&d.done.mike?d.done.mike:{};
       state.done.taylor=d.done&&d.done.taylor?d.done.taylor:{};
+      state.strength.mike=d.strength&&d.strength.mike?d.strength.mike:{};
+      state.strength.taylor=d.strength&&d.strength.taylor?d.strength.taylor:{};
       saveLocal();
       ui.week=currentWeek();
       renderAll();
